@@ -39,7 +39,10 @@ subdir = loomlib
 DIST_COMMON = $(pkginclude_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -69,14 +72,9 @@ am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-am__DEPENDENCIES_1 =
-libloomlib_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am_libloomlib_la_OBJECTS = libloomlib_la-queue.lo \
-	libloomlib_la-async_queue.lo libloomlib_la-thread_pool.lo
+libloomlib_la_LIBADD =
+am_libloomlib_la_OBJECTS = queue.lo async_queue.lo thread_pool.lo
 libloomlib_la_OBJECTS = $(am_libloomlib_la_OBJECTS)
-libloomlib_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libloomlib_la_CFLAGS) \
-	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -211,20 +209,17 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-AM_LDFLAGS = -avoid-version -module -shared
 lib_LTLIBRARIES = libloomlib.la
-pkginclude_HEADERS = \
-  queue.h            \
-  async_queue.h      \
-  thread_pool.h
-
 libloomlib_la_SOURCES = \
   queue.c                \
   async_queue.c          \
   thread_pool.c
 
-libloomlib_la_LIBADD = $(PTHREAD_LIBS)
-libloomlib_la_CFLAGS = $(PTHREAD_CFLAGS) $(AM_CFLAGS)
+pkginclude_HEADERS = \
+  queue.h            \
+  async_queue.h      \
+  thread_pool.h
+
 all: all-am
 
 .SUFFIXES:
@@ -291,7 +286,7 @@ clean-libLTLIBRARIES:
 	  rm -f "$${dir}/so_locations"; \
 	done
 libloomlib.la: $(libloomlib_la_OBJECTS) $(libloomlib_la_DEPENDENCIES) 
-	$(libloomlib_la_LINK) -rpath $(libdir) $(libloomlib_la_OBJECTS) $(libloomlib_la_LIBADD) $(LIBS)
+	$(LINK) -rpath $(libdir) $(libloomlib_la_OBJECTS) $(libloomlib_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -299,9 +294,9 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libloomlib_la-async_queue.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libloomlib_la-queue.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libloomlib_la-thread_pool.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/async_queue.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/queue.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/thread_pool.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -323,27 +318,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
-
-libloomlib_la-queue.lo: queue.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libloomlib_la_CFLAGS) $(CFLAGS) -MT libloomlib_la-queue.lo -MD -MP -MF $(DEPDIR)/libloomlib_la-queue.Tpo -c -o libloomlib_la-queue.lo `test -f 'queue.c' || echo '$(srcdir)/'`queue.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libloomlib_la-queue.Tpo $(DEPDIR)/libloomlib_la-queue.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='queue.c' object='libloomlib_la-queue.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libloomlib_la_CFLAGS) $(CFLAGS) -c -o libloomlib_la-queue.lo `test -f 'queue.c' || echo '$(srcdir)/'`queue.c
-
-libloomlib_la-async_queue.lo: async_queue.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libloomlib_la_CFLAGS) $(CFLAGS) -MT libloomlib_la-async_queue.lo -MD -MP -MF $(DEPDIR)/libloomlib_la-async_queue.Tpo -c -o libloomlib_la-async_queue.lo `test -f 'async_queue.c' || echo '$(srcdir)/'`async_queue.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libloomlib_la-async_queue.Tpo $(DEPDIR)/libloomlib_la-async_queue.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='async_queue.c' object='libloomlib_la-async_queue.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libloomlib_la_CFLAGS) $(CFLAGS) -c -o libloomlib_la-async_queue.lo `test -f 'async_queue.c' || echo '$(srcdir)/'`async_queue.c
-
-libloomlib_la-thread_pool.lo: thread_pool.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libloomlib_la_CFLAGS) $(CFLAGS) -MT libloomlib_la-thread_pool.lo -MD -MP -MF $(DEPDIR)/libloomlib_la-thread_pool.Tpo -c -o libloomlib_la-thread_pool.lo `test -f 'thread_pool.c' || echo '$(srcdir)/'`thread_pool.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libloomlib_la-thread_pool.Tpo $(DEPDIR)/libloomlib_la-thread_pool.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='thread_pool.c' object='libloomlib_la-thread_pool.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libloomlib_la_CFLAGS) $(CFLAGS) -c -o libloomlib_la-thread_pool.lo `test -f 'thread_pool.c' || echo '$(srcdir)/'`thread_pool.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
