@@ -7,5 +7,5 @@ Name: loomlib
 Description: Weaving threads has never been so easy!
 Requires:
 Version: @VERSION@
-Libs: -L${libdir} @PTHREAD_LIBS@
+Libs: -L${libdir} -lloomlib @PTHREAD_LIBS@
 Cflags: -I${includedir} @PTHREAD_CFLAGS@
