@@ -24,14 +24,15 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <pthread.h>
 
 #include <loomlib/async_queue.h>
 #include <loomlib/thread_pool.h>
 
 struct work_unit
 {
-  exec_func func;
-  func_data data;
+  void (*func)(void *data);
+  void *data;
 };
 
 struct thread_pool
@@ -43,7 +44,7 @@ struct thread_pool
   pthread_mutex_t lock;
 };
 
-static void THREAD_POOL_TERM_SIG (func_data data, exec_func* ef, func_data* nd) {}
+static void THREAD_POOL_TERM_SIG (void *data) { data = data; }
 
 static void *
 thread_loop (void *args)
@@ -68,13 +69,7 @@ thread_loop (void *args)
           return NULL;
         }
 
-      exec_func *next_func = NULL;
-      func_data *next_data = NULL;
-
-      work->func (work->data, next_func, next_data);
-
-      if (NULL != next_func)
-        thread_pool_push (pool, *next_func, *next_data);
+      work->func (work->data);
 
       free (work);
     }
@@ -122,7 +117,9 @@ thread_pool_free (struct thread_pool *pool)
 }
 
 bool
-thread_pool_push (struct thread_pool *pool, exec_func func, func_data data)
+thread_pool_push (struct thread_pool *pool,
+                  void(*func)(void *data),
+                  void *data)
 {
   struct work_unit *work = malloc (sizeof *work);
   work->func = func,

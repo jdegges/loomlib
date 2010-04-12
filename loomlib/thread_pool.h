@@ -33,21 +33,6 @@
 struct thread_pool;
 
 /*
- * The data to be operated on by EXEC_FUNC
- */
-typedef void * func_data;
-
-/*
- * The function to be executed by the thread pool.
- * If the function sets NEXT_FUNC (and optionally NEXT_DATA) then they will be
- * automatically added to the thread pool.
- */
-typedef void (*opaque)(void *, void (**)(), void **);
-typedef void (*exec_func) (func_data data, opaque *next_func,
-                           func_data *next_data);
-
-
-/*
  * Create a new thread pool.
  * MAX_THREADS threads will be started.
  */
@@ -67,7 +52,9 @@ thread_pool_free (struct thread_pool *pool);
  * EXEC_FUNC must not be NULL.
  */
 bool
-thread_pool_push (struct thread_pool *pool, exec_func func, func_data data);
+thread_pool_push (struct thread_pool *pool,
+                  void(*exec_func)(void *data),
+                  void *data);
 
 /*
  * Will cause all threads to shut down nicely once all of the work has been

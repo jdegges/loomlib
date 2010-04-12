@@ -24,6 +24,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <pthread.h>
 
 #include <loomlib/thread_pool.h>
 #include <loomlib/pipeline.h>
@@ -44,7 +45,7 @@ struct pipeline
   size_t max_pumps;
 
   size_t max_threads;
-  int active_lines;
+  size_t active_lines;
   bool terminated;
   pthread_mutex_t lock;
 };
@@ -173,7 +174,7 @@ pipeline_add_pump (struct pipeline *pipe,
 }
 
 static void
-pipeline_loop (func_data data, exec_func* next_func, func_data* next_data)
+pipeline_loop (void *data)
 {
   struct pipeline_state *state = data;
   struct pipeline *pipe = state->pipe;
@@ -215,7 +216,7 @@ pipeline_loop (func_data data, exec_func* next_func, func_data* next_data)
         }
     }
   /* pump product through the pipe */
-  else if (current_stage < pipe->num_pumps)
+  else if ((size_t) current_stage < pipe->num_pumps)
     {
       new_product = pipe->pump[current_stage] (pipe->pump_data[current_stage],
                                                product);
