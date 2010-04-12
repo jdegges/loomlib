@@ -56,8 +56,6 @@ async_queue_new (void)
 void
 async_queue_free (struct async_queue *queue)
 {
-  void *ptr;
-
   pthread_mutex_lock(&queue->lock);
 
   while (queue->size != 0)
@@ -78,7 +76,7 @@ async_queue_push(struct async_queue *queue, void *item)
 
   pthread_mutex_lock(&queue->lock);
 
-  if (rv = queue_push(&queue->queue, item))
+  if (true == (rv = queue_push(&queue->queue, item)))
     queue->size++;
 
   pthread_cond_broadcast(&queue->nonempty);
