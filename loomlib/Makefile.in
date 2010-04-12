@@ -73,7 +73,8 @@ am__base_list = \
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libloomlib_la_LIBADD =
-am_libloomlib_la_OBJECTS = queue.lo async_queue.lo thread_pool.lo
+am_libloomlib_la_OBJECTS = queue.lo async_queue.lo thread_pool.lo \
+	pipeline.lo
 libloomlib_la_OBJECTS = $(am_libloomlib_la_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -218,12 +219,14 @@ lib_LTLIBRARIES = libloomlib.la
 libloomlib_la_SOURCES = \
   queue.c                \
   async_queue.c          \
-  thread_pool.c
+  thread_pool.c          \
+  pipeline.c
 
 pkginclude_HEADERS = \
   queue.h            \
   async_queue.h      \
-  thread_pool.h
+  thread_pool.h      \
+  pipeline.h
 
 all: all-am
 
@@ -300,6 +303,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/async_queue.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pipeline.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/queue.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/thread_pool.Plo@am__quote@
 
