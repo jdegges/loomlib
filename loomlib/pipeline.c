@@ -97,7 +97,9 @@ pipeline_terminate (struct pipeline *pipe)
 }
 
 bool
-pipeline_add_inlet (struct pipeline *pipe, void *(*routine)(void *data), void *data)
+pipeline_add_inlet (struct pipeline *pipe,
+                    void *(*routine)(void *data),
+                    void *data)
 {
   assert (pipe);
 
@@ -115,7 +117,9 @@ pipeline_add_inlet (struct pipeline *pipe, void *(*routine)(void *data), void *d
 }
 
 bool
-pipeline_add_outlet (struct pipeline *pipe, void(*routine)(void *data, void *product), void *data)
+pipeline_add_outlet (struct pipeline *pipe,
+                     void(*routine)(void *data, void *product),
+                     void *data)
 {
   assert (pipe);
 
@@ -133,7 +137,9 @@ pipeline_add_outlet (struct pipeline *pipe, void(*routine)(void *data, void *pro
 }
 
 bool
-pipeline_add_pump (struct pipeline *pipe, void *(*routine)(void *data, void *product), void *data)
+pipeline_add_pump (struct pipeline *pipe,
+                   void *(*routine)(void *data, void *product),
+                   void *data)
 {
   assert (pipe);
   assert (routine);
@@ -153,7 +159,8 @@ pipeline_add_pump (struct pipeline *pipe, void *(*routine)(void *data, void *pro
       pipe->pump = realloc (pipe->pump, (sizeof *pipe->pump) * pipe->max_pumps);
       assert (pipe->pump);
 
-      pipe->pump_data = realloc (pipe->pump_data, (sizeof *pipe->pump_data) * pipe->max_pumps);
+      pipe->pump_data = realloc (pipe->pump_data,
+                                 (sizeof *pipe->pump_data) * pipe->max_pumps);
       assert (pipe->pump_data);
     }
 
@@ -210,7 +217,8 @@ pipeline_loop (func_data data, exec_func* next_func, func_data* next_data)
   /* pump product through the pipe */
   else if (current_stage < pipe->num_pumps)
     {
-      new_product = pipe->pump[current_stage] (pipe->pump_data[current_stage], product);
+      new_product = pipe->pump[current_stage] (pipe->pump_data[current_stage],
+                                               product);
     }
   /* deposit product at the outlet */
   else

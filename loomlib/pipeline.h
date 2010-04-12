@@ -62,7 +62,9 @@ pipeline_terminate (struct pipeline *pipe);
  * You must add exactly ONE inlet to every pipeline.
  */
 bool
-pipeline_add_inlet (struct pipeline *pipe, void *(*routine)(void *data), void *data);
+pipeline_add_inlet (struct pipeline *pipe,
+                    void *(*routine)(void *data),
+                    void *data);
 
 /*
  * Setup the endpoint of the pipe, where the product leaves the pipe.
@@ -71,7 +73,9 @@ pipeline_add_inlet (struct pipeline *pipe, void *(*routine)(void *data), void *d
  * You must add exactly ONE outlet to every pipeline.
  */
 bool
-pipeline_add_outlet (struct pipeline *pipe, void(*routine)(void *data, void *product), void *data);
+pipeline_add_outlet (struct pipeline *pipe,
+                     void(*routine)(void *data, void *product),
+                     void *data);
 
 /*
  * Setup a pump to move the product through the pipe.
@@ -79,7 +83,9 @@ pipeline_add_outlet (struct pipeline *pipe, void(*routine)(void *data, void *pro
  * executed in the order in which they were added.
  */
 bool
-pipeline_add_pump (struct pipeline *pipe, void *(*routine)(void *data, void *product), void *data);
+pipeline_add_pump (struct pipeline *pipe,
+                   void *(*routine)(void *data, void *product),
+                   void *data);
 
 /*
  * Start running the pipeline.
