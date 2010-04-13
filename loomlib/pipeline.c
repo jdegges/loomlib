@@ -189,10 +189,11 @@ pipeline_loop (void *data)
       if (pipe->terminated)
         {
           pthread_mutex_unlock (&pipe->lock);
+          free (state);
           return;
         }
 
-      if (pipe->active_lines < pipe->max_threads)
+      if (pipe->max_threads < pipe->active_lines)
         {
           pthread_mutex_unlock (&pipe->lock);
           thread_pool_push (pipe->pool, pipeline_loop, state);
@@ -214,6 +215,16 @@ pipeline_loop (void *data)
           new_state->current_stage = current_stage;
           thread_pool_push (pipe->pool, pipeline_loop, new_state);
         }
+      /* if it has dried up then clean up resources */
+      else
+        {
+          free (state);
+          pthread_mutex_lock (&pipe->lock);
+          if (0 == --pipe->active_lines)
+            thread_pool_terminate (pipe->pool);
+          pthread_mutex_unlock (&pipe->lock);
+          return;
+        }
     }
   /* pump product through the pipe */
   else if ((size_t) current_stage < pipe->num_pumps)
@@ -228,7 +239,8 @@ pipeline_loop (void *data)
 
       free (state);
       pthread_mutex_lock (&pipe->lock);
-      pipe->active_lines--;
+      if (0 == --pipe->active_lines)
+        thread_pool_terminate (pipe->pool);
       pthread_mutex_unlock (&pipe->lock);
       return;
     }
