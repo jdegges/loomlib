@@ -4,11 +4,13 @@ loomlib
 loomlib provides threading abstractions to help you weave threads in your
 application.
 
-Currently there are three basic structures available:
+Currently there are six basic structures available:
   1. Queue
   2. Asynchronous queue
   3. Thread pool
   4. Pipeline
+  5. Asynchronous list
+  6. Tree
 
 Please refer to the appropriate header files for further more details. You may
 also want to consult gurls (http://github.com/jdegges/gurls.git) to see an
