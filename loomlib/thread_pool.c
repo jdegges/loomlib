@@ -20,6 +20,8 @@
  * THE SOFTWARE.
  *****************************************************************************/
 
+#define _GNU_SOURCE
+
 #include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -132,4 +134,31 @@ bool
 thread_pool_terminate (struct thread_pool *pool)
 {
   return thread_pool_push (pool, THREAD_POOL_TERM_SIG, NULL);
+}
+
+static void
+barrier_thread (void *args)
+{
+  pthread_barrier_t *barrier = args;
+  pthread_barrier_wait (barrier);
+}
+
+bool
+thread_pool_barrier_wait (struct thread_pool *pool)
+{
+  pthread_barrier_t barrier;
+
+  pthread_mutex_lock (&pool->lock);
+
+  pthread_barrier_init (&barrier, NULL, pool->num_threads + 1);
+
+  while (max_threads--)
+    thread_pool_push (pool, barrier_thread, &barrier);
+
+  pthread_barrier_wait (&barrier);
+  pthread_barrier_destroy (&barrier);
+
+  pthread_mutex_unlock (&pool->lock);
+
+  return true;
 }

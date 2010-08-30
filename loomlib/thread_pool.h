@@ -57,6 +57,14 @@ thread_pool_push (struct thread_pool *pool,
                   void *data);
 
 /*
+ * Wait for all currently queued and executing work units to finish before
+ * returning. Any work units queued after a call to thread_pool_barrier_wait
+ * will not be waited on.
+ */
+bool
+thread_pool_barrier_wait (struct thread_pool *pool);
+
+/*
  * Will cause all threads to shut down nicely once all of the work has been
  * finished. No work pushed after this call will be done.
  */
