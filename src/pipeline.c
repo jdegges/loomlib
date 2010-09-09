@@ -26,8 +26,8 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#include <loomlib/thread_pool.h>
-#include <loomlib/pipeline.h>
+#include "thread_pool.h"
+#include "pipeline.h"
 
 struct pipeline
 {

@@ -1,4 +1,4 @@
-SUBDIRS = loomlib
+SUBDIRS = src include
 AUTOMAKE_OPTINS = subdir-objects
 
 dist_doc_DATA = \

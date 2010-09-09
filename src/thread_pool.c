@@ -28,8 +28,8 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#include <loomlib/async_queue.h>
-#include <loomlib/thread_pool.h>
+#include "async_queue.h"
+#include "thread_pool.h"
 
 struct work_unit
 {
@@ -146,6 +146,7 @@ barrier_thread (void *args)
 bool
 thread_pool_barrier_wait (struct thread_pool *pool)
 {
+  size_t max_threads = pool->num_threads;
   pthread_barrier_t barrier;
 
   pthread_mutex_lock (&pool->lock);

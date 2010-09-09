@@ -26,9 +26,9 @@
 #include <assert.h>
 #include <pthread.h>
 
-#include <loomlib/async_list.h>
-#include <loomlib/thread_pool.h>
-#include <loomlib/tree.h>
+#include "async_list.h"
+#include "thread_pool.h"
+#include "tree.h"
 
 struct tree
 {

@@ -26,7 +26,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include <loomlib/thread_pool.h>
 
 /*
  * A thread-safe pipeline.

@@ -10,7 +10,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-#include <loomlib/queue.h>
+#include "queue.h"
 
 
 struct queue {

@@ -25,8 +25,8 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#include <loomlib/queue.h>
-#include <loomlib/async_queue.h>
+#include "queue.h"
+#include "async_queue.h"
 
 struct async_queue {
   struct queue *queue;

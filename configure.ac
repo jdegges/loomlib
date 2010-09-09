@@ -33,6 +33,7 @@ AC_TYPE_SIZE_T
 AC_FUNC_MALLOC
 
 AC_CONFIG_FILES([Makefile
-                 loomlib/Makefile
+                 src/Makefile
+                 include/Makefile
                  loomlib.pc])
 AC_OUTPUT
