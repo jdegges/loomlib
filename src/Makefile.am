@@ -7,6 +7,7 @@ libloomlib_la_SOURCES = \
   async_list.c          \
   async_queue.c         \
   beta_queue.c          \
+  cache.c               \
   gamma_queue.c         \
   lock.c                \
   pipeline.c            \
