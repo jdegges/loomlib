@@ -1,4 +1,3 @@
-#include "beta_queue.h"
 #include "cache.h"
 
 struct cache
@@ -8,7 +7,7 @@ struct cache
   size_t size;
   (void *)(*alloc)(size_t size);
   (void)(*free)(void *ptr);
-  struct beta_queue *queue;
+  void **table;
 };
 
 struct cache *
@@ -18,17 +17,17 @@ cache_init (size_t max_count,
             (void)(*free_ptr)(void *ptr))
 {
   struct cache *cache;
-  struct beta_queue *queue;
+  void **table;
 
-  if (0 == size)
+  if (0 == max_count || 0 == size)
     return NULL;
 
   cache = malloc (sizeof *cache);
   if (NULL == cache)
     return NULL;
 
-  queue = beta_queue_new ();
-  if (NULL == queue)
+  table = calloc (max_count, sizeof *table)
+  if (NULL == table)
     return NULL;
 
   cache->max_count = count;
@@ -36,7 +35,7 @@ cache_init (size_t max_count,
   cache->size = size;
   cache->alloc = alloc_ptr;
   cache->free = free_ptr;
-  cache->queue = queue;
+  cache->table = table;
 
   return cache;
 }
@@ -44,14 +43,21 @@ cache_init (size_t max_count,
 void
 cache_destroy (struct cache *cache)
 {
+  while (cache->count--)
+    cache->free (cache->table[cache->count]);
+
+  free (cache->table);
+  free (cache);
 }
 
 void *
 cache_alloc (struct cache *cache)
 {
-  void *ptr = beta_queue_pop (cache->queue);
+  void *ptr;
 
-  if (NULL == ptr)
+  if (cache->count)
+    ptr = cache->table[--cache->count];
+  else
     ptr = cache->alloc (cache->size);
 
   return ptr;
@@ -60,11 +66,8 @@ cache_alloc (struct cache *cache)
 void
 cache_free (struct cache *cache, void *ptr)
 {
-  if (0 < cache->max_count && cache->max_count <= cache->count)
+  if (cache->max_count <= cache->count)
     cache->free (ptr);
   else
-    {
-      beta_queue_push (cache->queue, ptr);
-      cache->count++;
-    }
+    cache->table[cache->count++] = ptr;
 }
