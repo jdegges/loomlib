@@ -3,6 +3,7 @@ pkginclude_HEADERS =  \
   async_list.h        \
   async_queue.h       \
   beta_queue.h        \
+  cache.h             \
   gamma_queue.h       \
   pipeline.h          \
   queue.h             \
