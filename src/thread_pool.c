@@ -29,6 +29,7 @@
 #include <pthread.h>
 
 #include "async_queue.h"
+#include "barrier.h"
 #include "thread_pool.h"
 
 struct work_unit
@@ -139,25 +140,25 @@ thread_pool_terminate (struct thread_pool *pool)
 static void
 barrier_thread (void *args)
 {
-  pthread_barrier_t *barrier = args;
-  pthread_barrier_wait (barrier);
+  loomlib_barrier_t *barrier = args;
+  loomlib_barrier_wait (barrier);
 }
 
 bool
 thread_pool_barrier_wait (struct thread_pool *pool)
 {
   size_t max_threads = pool->num_threads;
-  pthread_barrier_t barrier;
+  loomlib_barrier_t* barrier;
 
   pthread_mutex_lock (&pool->lock);
 
-  pthread_barrier_init (&barrier, NULL, pool->num_threads + 1);
+  loomlib_barrier_init (barrier, NULL, pool->num_threads + 1);
 
   while (max_threads--)
     thread_pool_push (pool, barrier_thread, &barrier);
 
-  pthread_barrier_wait (&barrier);
-  pthread_barrier_destroy (&barrier);
+  loomlib_barrier_wait (barrier);
+  loomlib_barrier_destroy (barrier);
 
   pthread_mutex_unlock (&pool->lock);
 
