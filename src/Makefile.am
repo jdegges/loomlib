@@ -12,6 +12,7 @@ libloomlib_la_SOURCES = \
   cache.c               \
   gamma_queue.c         \
   lock.c                \
+  lock.h                \
   pipeline.c            \
   queue.c               \
   thread_pool.c         \
